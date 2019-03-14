@@ -16,7 +16,7 @@ endmodule
 
 
 module rate_divider(clk, ascii, buzzer, freq_out)
-	input [6:0] acsii;
+	input [6:0] ascii;
 	input clk;
 	
 	output reg speaker;
@@ -26,7 +26,7 @@ module rate_divider(clk, ascii, buzzer, freq_out)
 	
 	always@(posedge clk)
     begin
-    case (acsii[6:0])
+    case (ascii[6:0])
 			7'd87: clkdivider <= 50000000/1108; // C# Letter W
 			7'd69: clkdivider <= 50000000/1244; // D# Letter E
 			7'd84: clkdivider <= 50000000/1478; // F# Letter T

@@ -5,8 +5,8 @@ module main (SW, KEY, PS2_KBCLK, PS2_KBDAT, GPIO, HEX0, HEX1);
 	input PS2_KBDAT;    // Data input from the keyboard (byte)      (This and the above input need to be deciphered to values we can work with)
 	output [35:0] GPIO; // These are our buzzer speakers. 7-0 is main buzzer. 35-28 is register buzzer #1. 27-20 is #2. 19-12 is #3.
 	
-	output HEX0; // NOT NEEDED - DESIGN
-	output HEX1; // ^
+	output [7:0] HEX0; // NOT NEEDED - DESIGN
+	output [7:0] HEX1; // ^
 	
 	// Convert the keyboard input into processable data (ie, get ascii symbol of key)
 	wire [6:0] ascii_val;
@@ -15,7 +15,7 @@ module main (SW, KEY, PS2_KBCLK, PS2_KBDAT, GPIO, HEX0, HEX1);
 	show_key keys(ascii_val[6:0], HEX1[7:0], HEX0[7:0]); // visual display -> showing the keys being used (for testing and looking pretty lol)
 	
 	// Simply call the music player module:
-	play_music buzzer1(.key(ascii_val[6:0]), .buzzer(GPIO[7:0])); // NOT DONE, MORE I/O present
+	ratedivider buzzer1(.key(ascii_val[6:0]), .buzzer(GPIO[7:0])); // NOT DONE, MORE I/O present
 	
 	
 	// Simply call the recording saver module:
