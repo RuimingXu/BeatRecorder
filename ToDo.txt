@@ -1,0 +1,32 @@
+-------------WEEKLY TASKS--------------
+PLEASE REFER TO NOTES TXT FILE AS WELL
+
+
+~~~~~SPRINT 1~~~~~
+Moe:
+- Create main module
+- Create music player module
+- Figure out keyboard/audio inputs and outputs
+- Create schematic for whole project
+- Create schematic for music player
+Robert:
+- Create schematic for recording switches
+- Create audio tone rate divider modules
+- Create music selection module
+
+
+
+
+~~~~~SPRINT 2~~~~~
+Moe:
+Robert:
+
+
+
+
+~~~~~SPRINT 3~~~~~
+Moe:
+Robert:
+
+
+

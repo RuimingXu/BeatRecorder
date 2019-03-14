@@ -1,0 +1,94 @@
+CSCB58 Project Report: Winter 2019
+
+Team Member A
+-------------
+First Name: Muhammad
+Last Name: Ali
+Student Number: 1003939642
+UofT E-mail Address: moyo.ali@mail.utoronto.ca
+
+
+Team Member B
+-------------
+First Name: Ruiming
+Last Name: Xu
+Student Number: 1003905624
+UofT E-mail Address: ruiming.xu@mail.utoronto.ca
+
+
+Project Plan
+--------
+
+Project Title: Beat Recorder 3000
+
+
+Provide a one paragraph description of your project:
+	'Beat Recorder 3000' is an electronic keyboard that plays various drums, piano rythms and other sounds in order to
+	make a beat or play some music! The best part? You can store and record your beats and use them to save a sick rythm you
+	come up with or even use them as backdrop/instrumental for a new piece you wish to compose. To do this, you would need
+	to select a switch in which to store your beat, click the record key, start playing your beat by hitting keys on the
+	keyboard, then click the record key again to stop recording! 'Beat Recorder" will hold onto your beat temporarily, then
+	either delete it if you hit the delete key or save it in the switch you selected if you click the save key. Now you can
+	access/play that sick beat anytime when you use that switch! You can also write over pre-written beats!
+
+What is your plan for the first week?
+	- Compile audio sounds needed
+	- Create keyboard keys/input to play audio tracks
+	- Set up FSM and data path to move between audio channels and sounds per key chosen
+	- Set up audio device to output tracks/sounds (connect to FPGA board)
+	- ^ Finish music player/instrument aspect of project
+
+What is your plan for the second week?
+	- Set up keys to record, delete and save
+	- Create flip flops to save a track
+	- Create max memory allocation (# key presses + length) for flip-flops
+	- Set up switches to point to/store a specific pattern/rhythem if present
+	- ^ Finish recorder aspect of project
+
+What is your plan for the third week?
+	- Finish tasks that were pushed over to this week (or didnt work last week)
+	- Debug all errors that were mulled over/ignored in prior weeks
+	- Test/play with the project (make sure all features work)
+	- Add design features (lights display, start up sounds)
+	(- Add visual display that shows all keys beats/rythems, time allowing)
+
+What is your backup plan if things don’t work out as planned?
+	- If keys become complicated, buckle down to using a smaller amount
+	- If using keyboard keys becomes too difficult, ^ (way smaller) on FPGA board switches
+	- If unable to use compputer's audio, find/request compatible speaker
+	- Drastic measure: If unable to find any speaker/get speakers to work, switch to making
+		a visual VGA display (ie, a pattern recognizer and repeater instead of audio recorder).
+	- If time-limited for flip flop beats, only store keys pressed and not length as well.
+
+Weekly Reports
+--------------
+Week 1:
+	N/A yet. Example below as template.
+
+[This is an example of a report where things didn't go so well.]
+Week 1: 
+	We added and tested the sensors and the main FSM. 
+	The distance sensor we had intended to use didn't work as expected (wasn't precise enough at further distances, only seems to work accurately within 5-10cm), so instead we've decided to change the project to use a light sensor instead.
+	Had trouble getting the FSM to work (kept getting stuck in state 101, took longer to debug than expected), so we may not be able to add the high score feature. We have updated that in the project description as an optional feature.
+
+
+
+References
+----------
+- ASIC Notepad-- (https://github.com/armitag8/ASIC_Notepad--/tree/master/src)
+	* Source code for keyboard input was referred to in order to figure out how to implement PS2 keyboard notes.
+	  Only relevant items were used: Detecting keyboard clock and data signal allocating to keys.
+	  Keyboard input was buffed down to the keys needed to play buzzer sounds, and ascii return values were edited
+	  to be more relevant to the music_player, etc. modules.
+	  
+
+
+
+Repo & Video
+------------
+<At the end of the project, provide links to your code repository and presentation video (and passwords if not public)>
+Repo:
+	- https://github.com/moyoonthego/Beat-Recorder-3000
+Video:
+	- N/A yet
+
