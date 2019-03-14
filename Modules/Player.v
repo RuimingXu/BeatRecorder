@@ -7,7 +7,7 @@ module	play_music(ascii, buzzer, is_record);
 	// Case statement needed: 19 possible sounds... Different frequency rate for each
 	// @ Moe: I change the way piano keys are assigned to the keyboard keys. We could add more keys later.
 	//        For now the keys assignments looks like the diagram drawn in the rate_divider module
-	
+
 	
 	// Recording section goes here. DO NOT DO -> We need to call FSM module and store in registers. Will do next week.
 	// @ Moe: not quite sure in which form are sounds stored here. Probably in form of "frequency + duration"?
