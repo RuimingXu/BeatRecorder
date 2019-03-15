@@ -63,7 +63,21 @@ What is your backup plan if things don’t work out as planned?
 Weekly Reports
 --------------
 Week 1:
-	N/A yet. Example below as template.
+	We created a repository with all necessary folders and preliminary documents.
+	Created a state diagram and model for how we wish to accomplish project requirements.
+	Created modules to: - translate/parse input from keyboard to FPGA board
+	                    - rate divider modules to send/create appropriate frequency rate to buzzer
+	                    - main, top and player modules to isolate project segments (to make week 2 integration easier, as well as testing)
+	                    - a visual display module (to see notes being played on Hex display)
+	Tested, compiled and fixed modules on the DE2 board in lab:
+		- keyboard input was well recieved, note display worked as desired
+		- rate divider worked as wanted, the appropriate notes were being assigned
+		- A MAJOR ISSUE: The keyboard input constantly sends a new value (even if it is same as last pressed item).
+		This stops the rate divider from ever reaching 0 (switching from 1) as it is always reassigned new counter value
+			- We realized we needed a seperate counter that didn't rely on the keyboards input -> Implemented a new var
+			that switched from posedge to negedge to do this.
+				- Time was limited, so we didn't get to test these changes. We will continue to edit and monitor it.
+	Also created (didn't test FSM module -> To lessen the heavy burden of next week's workload.
 
 [This is an example of a report where things didn't go so well.]
 Week 1: 
@@ -80,6 +94,10 @@ References
 	  Only relevant items were used: Detecting keyboard clock and data signal allocating to keys.
 	  Keyboard input was buffed down to the keys needed to play buzzer sounds, and ascii return values were edited
 	  to be more relevant to the music_player, etc. modules.
+- DE2 Keyboard-- (https://github.com/ItsMeWithTheFace/DE2Keyboard)
+	* Source code for keyboard input was referred to, only for two purposes:
+		- To recall how the buzzer hums its beat (switching from 0 to 1, how)
+		- To understand how GPIO works (how to connect pins for it to buzzer)
 	  
 
 
