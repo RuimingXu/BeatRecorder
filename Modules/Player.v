@@ -26,7 +26,7 @@ module rate_divider(clk, ascii, speaker, freq_out);
 	reg [18:0] clkdivider; // ***** This was [31:0] in reference code. Does not see the point of doing that *****
 
 	reg [31:0] counter;
-	reg checkOn = 1'b1;
+	reg checkOn = 1'b1; // ISSUE IS PROBABLY HAPPENING HERE (Maybe this needs to be passed? Assigning it before is messing it?)
 	
 	
 	
@@ -63,9 +63,9 @@ module rate_divider(clk, ascii, speaker, freq_out);
 			counter <= counter-1;
 		end
         freq_out <= counter[18:0];
-    end
-
-    always @(posedge clk) if(counter==0) speaker <= ~speaker;
+		
+		if(counter==0) speaker <= ~speaker;
+    end 
 	
 
 endmodule
