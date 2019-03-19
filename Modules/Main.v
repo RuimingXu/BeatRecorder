@@ -10,7 +10,7 @@ module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO,
 	output [7:0] HEX1; // ^
 
 	output [17:0] LEDR;
-	output [0:0] LEDG;
+	output [2:0] LEDG;
 	
 	// Convert the keyboard input into processable data (ie, get ascii symbol of key)
 	wire [6:0] ascii_val;
@@ -19,12 +19,6 @@ module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO,
 	show_key keys(ascii_val[6:0], HEX1[7:0], HEX0[7:0]); // visual display -> showing the keys being used (for testing and looking pretty lol)
 	
 	// Simply call the music player module:
-	rate_divider buzzer1(.clk(CLOCK_50), .ascii(ascii_val[6:0]), .speaker(LEDG[0]), .freq_out(LEDR)); // NOT DONE, MORE I/O present
-	
-	
-	// Simply call the recording saver module:
-	
-	
-	// Simply call the recording player module:
+	ChooseMusic buzzers(.clk(CLOCK_50), .ascii(ascii_val[6:0]), .speaker(LEDG[0]), .saved1{LEDG[1]}, .saved2(LEDG[2]), .freq_out(LEDR), .toggle(SW[2:0]), .record(KEY[0])); // NOT DONE, MORE I/O present
 	
 endmodule

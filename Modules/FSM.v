@@ -1,12 +1,11 @@
-module FSM(ram_load, keyboard_record, RD_load_from, HEX0, SW, KEY, clk);
-    input [17:0] SW;
+module FSM(ram_load, keyboard_record, RD_load_from, SW, KEY, clk);
+    input [2:0] SW;
     input [3:0] KEY;
 	input clk;
 	
     output reg ram_load;
 	output reg keyboard_record;
 	output reg RD_load_from;
-	output [7:0] HEX0;
 	
 
     wire recordAndPlayW, playRecordW, playRecordAndPlayW;
