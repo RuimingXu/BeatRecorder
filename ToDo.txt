@@ -19,7 +19,12 @@ Robert:
 
 ~~~~~SPRINT 2~~~~~
 Moe:
+- Fix/debug/test issues from last week (if present)
+- Edit/complete FSM module and connect to main/other modules
+- Create IO for Switches, Keys and allowing user to store recordings
+- Help with register module (Robert)
 Robert:
+- Create register module 
 
 
 
