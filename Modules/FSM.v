@@ -1,18 +1,19 @@
-module FSM(ram_load, keyboard_record, RD_load_from, HEX0, SW, KEY, CLOCK_50);
+module FSM(ram_load, keyboard_record, RD_load_from, HEX0, SW, KEY, clk);
     input [17:0] SW;
     input [3:0] KEY;
-	input CLOCK_50;
+	input clk;
 	
-    output ram_load;
-	output keyboard_record;
-	output RD_load_from;
+    output reg ram_load;
+	output reg keyboard_record;
+	output reg RD_load_from;
 	output [7:0] HEX0;
 	
 
     wire recordAndPlayW, playRecordW, playRecordAndPlayW;
-	reg [7:0] stateInfo;
+	 reg [7:0] stateInfo;
 
-    reg [3:0] y_Q, Y_D; // y_Q represents current state, Y_D represents next state
+    reg [3:0] Y_Q, Y_D; // y_Q represents current state, Y_D represents next state
+	 reg current_state, next_state;
 
     localparam freePlay = 4'b0000, recordAndPlay = 4'b0001, playRecord = 4'b0011, playRecordAndPlay = 4'b0010;
 
@@ -26,7 +27,7 @@ module FSM(ram_load, keyboard_record, RD_load_from, HEX0, SW, KEY, CLOCK_50);
     //This will make it easier to read, modify and debug the code.
     always@(*)
     begin: state_table
-        case (y_Q)
+        case (Y_Q)
             freePlay: begin
                    if (recordAndPlayW) Y_D <= recordAndPlay;
 				   else if (playRecordW) Y_D <= playRecord;
@@ -51,7 +52,7 @@ module FSM(ram_load, keyboard_record, RD_load_from, HEX0, SW, KEY, CLOCK_50);
 
     // Output logic aka all of our datapath control signals
     always @(*)
-    begin:
+    begin
         // By default make all our signals 0
         ram_load = 1'b0;
         keyboard_record = 1'b0;
@@ -69,7 +70,7 @@ module FSM(ram_load, keyboard_record, RD_load_from, HEX0, SW, KEY, CLOCK_50);
             end
 
             playRecord: begin
-				RD_load_from = 1'b0
+				RD_load_from = 1'b0;
             end
 			
 			playRecordAndPlay: begin

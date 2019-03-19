@@ -20,21 +20,14 @@ module rate_divider(clk, ascii, speaker, freq_out);
 	input [6:0] ascii;
 	input clk;
 	
-	output reg speaker;
+	output reg speaker = 1'b1;
 	output reg [18:0] freq_out;
 	
-	reg [18:0] clkdivider; // ***** This was [31:0] in reference code. Does not see the point of doing that *****
+	reg [31:0] clkdivider; // ***** This was [31:0] in reference code. Does not see the point of doing that *****
 
-	reg [31:0] counter;
-	reg checkOn = 1'b1; // ISSUE IS PROBABLY HAPPENING HERE (Maybe this needs to be passed? Assigning it before is messing it?)
-	
-	
+	reg [31:0] counter = 32'b1;
 	
     always @(posedge clk)
-    begin
-	 
-	 
-	 	if (checkOn == 1'b1)
 		begin
 			case (ascii[6:0])
 				7'd87: clkdivider <= 50000000/1108; // C# Letter W
@@ -47,25 +40,25 @@ module rate_divider(clk, ascii, speaker, freq_out);
 				7'd68: clkdivider <= 50000000/1318; // E  Letter D
 				7'd70: clkdivider <= 50000000/1396; // F  Letter F      keyboard:  | W | E | / | T | Y | U | / |
 				7'd71: clkdivider <= 50000000/1566; // G  Letter G               | A | S | D | F | G | H | J |
-				7'd72: clkdivider <= 50000000/880;  // A  Letter H ******** This is the lower A provided by the current frequency
-				7'd74: clkdivider <= 50000000/986;  // B  Letter J ******** This is the lower B provided by the current frequency
-				default: clkdivider <= 25000000;   // center C for default
+				7'd72: clkdivider <= 50000000/880;  //  A  Letter H ******** This is the lower A provided by the current frequency
+				7'd74: clkdivider <= 25000000;  // 50000000/986B  Letter J ******** This is the lower B provided by the current frequency
+				default: clkdivider <= 200000000;   // center C for default
 			endcase
-			checkOn <= 1'b0;
 		end
-	 
-		if(counter==0)
+
+
+    always @(posedge clk)
+    begin
+        if(counter==0) counter <= clkdivider-1; else counter <= counter-1;
+        freq_out <= clkdivider[18:0];
+    end
+
+    always @(posedge clk)
+	 begin
+		if (counter==0)
 		begin
-			counter <= clkdivider-1;
-			checkOn <= 1'b1;
+			speaker <= ~speaker;
 		end
-		else begin
-			counter <= counter-1;
-		end
-        freq_out <= counter[18:0];
-		
-		if(counter==0) speaker <= ~speaker;
-    end 
-	
+	 end
 
 endmodule
