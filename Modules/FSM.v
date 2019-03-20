@@ -1,24 +1,26 @@
-module FSM(ram_load, keyboard_record, RD_load_from, SW, KEY, clk);
-    input [2:0] SW;
+module FSM(loadAFromRam, loadBFromRam, ramARecord, ramBRecord, SW, KEY, clk);
+    input [17:0] SW;
     input [3:0] KEY;
 	input clk;
 	
-    output reg ram_load;
-	output reg keyboard_record;
-	output reg RD_load_from;
-	
+    output reg loadAFromRam;
+	output reg loadBFromRam;
+	output reg ramARecord;
+	output reg ramBRecord;
 
-    wire recordAndPlayW, playRecordW, playRecordAndPlayW;
-	 reg [7:0] stateInfo;
+    wire playAFromRamW, playBFromRamW, playBothFromRamW, recordToAW, recordToBW;
+	reg [7:0] stateInfo;
 
-    reg [3:0] Y_Q, Y_D; // y_Q represents current state, Y_D represents next state
-	 reg current_state, next_state;
+    reg [2:0] Y_Q, Y_D; // y_Q represents current state, Y_D represents next state
+	// reg current_state, next_state; (Probably not using this, use Y_Q and Y_D above)
 
-    localparam freePlay = 4'b0000, recordAndPlay = 4'b0001, playRecord = 4'b0011, playRecordAndPlay = 4'b0010;
+    localparam freePlay = 3'b000, recordToA = 3'b110, recordToB = 3'b100, playAFromRam = 3'b001,
+			playBFromRam = 3'b011, playBothFromRam = 3'b111;
 
-    assign recordAndPlayW = SW[0];
-    assign playRecordW = SW[1];
-    assign playRecordAndPlayW = SW[2];
+    assign playAFromRamW = SW[16];
+    assign playBFromRamW = SW[17];
+	assign recordToAW = SW[14];
+	assign recordToBW = SW[15];
 
     //State table
     //The state table should only contain the logic for state transitions
@@ -27,24 +29,44 @@ module FSM(ram_load, keyboard_record, RD_load_from, SW, KEY, clk);
     always@(*)
     begin: state_table
         case (Y_Q)
+			// Turn on any of the state switch to jump from the freePlay to any other state
             freePlay: begin
-                   if (recordAndPlayW) Y_D <= recordAndPlay;
-				   else if (playRecordW) Y_D <= playRecord;
-				   else if (playRecordAndPlayW) Y_D <= playRecordAndPlay;
-                   else Y_D <= Y_Q;
-               end
-            recordAndPlay: begin
-                   if (!recordAndPlayW) Y_D <= freePlay;
-                   else Y_D <= recordAndPlay;
-               end
-            playRecordW: begin
-                   if (!playRecordW) Y_D <= freePlay;
-                   else Y_D <= playRecordW;
-               end
-            playRecordAndPlay: begin
-                   if (!playRecordAndPlayW) Y_D <= freePlay;
-                   else Y_D <= playRecordAndPlayW;
-               end
+					if (playAFromRamW && playBFromRamW) Y_D <= playBothFromRam;
+					else if (playAFromRamW) Y_D <= playAFromRam;
+					else if (playBFromRamW) Y_D <= playBFromRam;
+					else if (recordToAW) Y_D <= recordToA;
+					else if (recordToBW) Y_D <= recordToB;
+					else Y_D <= Y_Q;
+				end
+				
+            playAFromRamW: begin
+					if (!playAFromRamW) Y_D <= freePlay;
+					else Y_D <= playAFromRam;
+				end
+				
+            playBFromRamW: begin
+					if (!playBFromRamW) Y_D <= freePlay;
+					else Y_D <= playBFromRam;
+				end
+				
+			// @Moe: The case below could result in replay of a piece of record when one of the two play from record switch is turned off
+			playBothFromRamW: begin
+					if (!playAFromRamW && playBFromRamW) Y_D <= playBFromRam;
+					else if (playAFromRamW && !playBFromRamW) Y_D <= playAFromRam;
+					else if (!playAFromRamW && !playBFromRamW) Y_D <= freePlay;
+					else Y_D <= playBothFromRam;
+				end
+				
+            recordToAW: begin
+					if (!recordToAW) Y_D <= freePlay;
+					else Y_D <= recordToAW;
+				end
+				
+			recordToBW: begin
+					if (!recordToBW) Y_D <= freePlay;
+					else Y_D <= recordToBW;
+				end
+				
             default: Y_D = freePlay;
         endcase
     end // state_table
@@ -53,35 +75,44 @@ module FSM(ram_load, keyboard_record, RD_load_from, SW, KEY, clk);
     always @(*)
     begin
         // By default make all our signals 0
-        ram_load = 1'b0;
-        keyboard_record = 1'b0;
-        RD_load_from = 2'b00;
+        loadAFromRam = 1'b0;
+        loadBFromRam = 1'b0;
+        ramARecord = 1'b0;
+		ramBRecord = 1'b0;
 
-        case (current_state)
+        case (Y_Q)
             freePlay: begin
 				//pass
             end
-
-            recordAndPlay: begin
-                ram_load = 1'b1;
-                keyboard_record = 1'b1;
-				RD_load_from = 1'b1;
+			
+            playAFromRam: begin
+                loadAFromRam = 1'b1;
             end
 
-            playRecord: begin
-				RD_load_from = 1'b0;
+            playBFromRam: begin
+                loadBFromRam = 1'b1;
+            end
+
+            playBothFromRam: begin
+                loadAFromRam = 1'b1;
+				loadBFromRam = 1'b1;
+            end
+
+            recordToA: begin
+				ramARecord = 1'b1;
             end
 			
-			playRecordAndPlay: begin
-				// Multiple Buzzer needed for this. *******************
-			end
-			endcase
+            recordToB: begin
+				ramBRecord = 1'b1;
+            end			
+
+		endcase
 	end
 	
 	// current_state registers
     always@(posedge clk)
     begin: state_FFs
-        current_state <= next_state;
+        Y_Q <= Y_D;
     end
 
 endmodule
