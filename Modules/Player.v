@@ -18,23 +18,28 @@ module ChooseMusic (freq_out, ascii, clk, speaker, saved1, saved2, toggle, recor
 	
 	FSM storevals(loadAFromRam, loadBFromRam, ramARecord, ramBRecord, toggle, clk); // get states from user/FSM
 	
+	wire [6:0] new_keyA; // the artificial note acquired from storage files
+	wire [6:0] new_keyB; // artificial note
+	
 	always @(*)
 	begin
 		if (loadAFromRam == 1'b1) // Get output/play backdrop from A buzzer
 		begin
-			rate_divider_no_display buzzerA(clk,.ascii(/*??????*/), .speaker(saved1));
+			readRecording forAvalue(new_keyA, clk, 1'b1); // call helper to get stored key
+			rate_divider_no_display buzzerA(clk,.ascii(new_keyA), .speaker(saved1)); // send to output
 		end
 		if (loadBFromRam == 1'b1) // Get output/play backdrop from B buzzer
 		begin
-			rate_divider_no_display buzzerB(clk,.ascii(/*??????*/), .speaker(saved2));
+			readRecording forBvalue(new_keyB, clk, 1'b0); // call helper to get stored key
+			rate_divider_no_display buzzerB(clk,.ascii(new_keyB), .speaker(saved2)); // output
 		end
 		if (ramARecord == 1'b1) //Save and store what is being freeplayed to memory for A
 		begin
-			//??
+			storeRecording forA(.ascii(ascii), .clk(clk), .isA(1'b1)); // call helper module
 		end
 		if (ramBRecord == 1'b1) //Save and store what is being freeplayed to memory for B
 		begin
-			//??
+			storeRecording forB(.ascii(ascii), .clk(clk), .isA(1'b0)); // call helper module
 		end
 	end
 endmodule
