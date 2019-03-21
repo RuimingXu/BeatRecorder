@@ -48,4 +48,5 @@ input clk;
 input isA;
 
 // THIS MODULE NEEDS ERROR HANDLING (FOR EOF AND FILE NONEXISTANT CASES)
+$fscanf(keyfile,"%d\n", newkey); //scan each line and get the value as a decimal (of course)
 endmodule
