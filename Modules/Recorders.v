@@ -80,6 +80,15 @@ begin: getting_keys
 			if ($feof(keyfile)) begin
 				// if we reached end of the A buzzers output, (and presumably read A switch is still on), restart reading from top
 				// EITHER RESTART ENTIRE MODULE HERE SOMEHOW OR JUST REOPEN FILE
+				if (isA) begin // get the named file based on which buzzer it is
+					keyfile = $fopen("A_keys.txt","r");
+				end
+				else begin
+					keyfile = $fopen("B_keys.txt","r");
+				end
+				$fscanf(keyfile,"%d\n", newkey); //scan and keep first ascii character again
+				$fscanf(keyfile,"%b\n", counter); //scan and keep first count value again
+				prev_key[6:0] <= newkey[6:0]
 			end
 			$fscanf(keyfile,"%d\n", newkey);
 			$fscanf(keyfile,"%b\n", counter);
