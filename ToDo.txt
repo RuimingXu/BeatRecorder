@@ -33,6 +33,7 @@ Robert:
 ~~~~~SPRINT 3~~~~~
 Moe:
 Robert:
+- Fix FSM (only using SW when should be using KEY as well, etc)
 
 
 

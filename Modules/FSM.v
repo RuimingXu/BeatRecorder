@@ -1,6 +1,6 @@
-module FSM(loadAFromRam, loadBFromRam, ramARecord, ramBRecord, SW, KEY, clk);
-    input [17:0] SW;
-    input [3:0] KEY;
+module FSM(loadAFromRam, loadBFromRam, ramARecord, ramBRecord, toggles, clk);
+    input [17:0] toggles;
+    // input [3:0] KEY; YOU DONT END UP USING THIS :(((((
 	input clk;
 	
     output reg loadAFromRam;
@@ -17,10 +17,10 @@ module FSM(loadAFromRam, loadBFromRam, ramARecord, ramBRecord, SW, KEY, clk);
     localparam freePlay = 3'b000, recordToA = 3'b110, recordToB = 3'b100, playAFromRam = 3'b001,
 			playBFromRam = 3'b011, playBothFromRam = 3'b111;
 
-    assign playAFromRamW = SW[16];
-    assign playBFromRamW = SW[17];
-	assign recordToAW = SW[14];
-	assign recordToBW = SW[15];
+    assign playAFromRamW = toggles[17];
+    assign playBFromRamW = toggles[16];
+	assign recordToAW = toggles[1];
+	assign recordToBW = toggles[0];
 
     //State table
     //The state table should only contain the logic for state transitions

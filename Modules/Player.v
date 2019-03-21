@@ -3,36 +3,36 @@ module ChooseMusic (freq_out, ascii, clk, speaker, saved1, saved2, toggle, recor
 	input clk;
 	output reg speaker; // main buzzer
 	output reg [18:0] freq_out; // all the above IO are as needed by rate_divider
-	input [2:0] toggle; // tells us which switch/buzzer to store info for if at all
-	input record; // KEY for if record button is pressed or not
+	input [17:0] toggle; // tells us which switch/buzzer to store info for if at all
+	input [3:0] record; // KEY for if record button is pressed or not
     output reg saved1; // recorder buzzer #1
 	output reg saved2; // recorder buzzer #2
+	
+	// Free play mode should be always on: call module
+	rate_divider buzzer1(clk, ascii, speaker, freq_out);
 
-	input ram_load;
-	input keyboard_record;
-	input RD_load_from; // above three are acquired from FSM
+    input loadAFromRam;
+	input loadBFromRam;
+	input ramARecord;
+	input ramBRecord; // above four are acquired from FSM below
+	
+	FSM storevals(loadAFromRam, loadBFromRam, ramARecord, ramBRecord, toggle, clk); // get states from user/FSM
 	
 	always @(*)
 	begin
-		FSM storevals(ram_load, keyboard_record, RD_load_from, .SW(toggle), .KEY(record), clk); // get states from user/FSM
-		
-		if (/*?????*/) // if in freeplay mode, just use the output buzzer and play it
+		if (loadAFromRam == 1'b1) // Get output/play backdrop from A buzzer
 		begin
-			rate_divider buzzer1(clk, ascii, speaker, freq_out);
+			rate_divider_no_display buzzerA(clk,.ascii(/*??????*/), .speaker(saved1));
 		end
-		if (/*?????*/) // if first save buzzer is requested when already saved
+		if (loadBFromRam == 1'b1) // Get output/play backdrop from B buzzer
 		begin
-			rate_divider_no_display buzzer2(clk,.ascii(/*??????*/), .speaker(saved1));
+			rate_divider_no_display buzzerB(clk,.ascii(/*??????*/), .speaker(saved2));
 		end
-		if (/*?????*/) // if second save buzzer is requested when already saved
-		begin
-			rate_divider_no_display buzzer2(clk,.ascii(/*??????*/), .speaker(saved2));
-		end
-		if (/*?????*/) // if first buzzer wants to save a new recording (NOTE: If both switches are on, only store in first ie, rightmost)
+		if (ramARecord == 1'b1) //Save and store what is being freeplayed to memory for A
 		begin
 			//??
 		end
-		if (/*?????*/) // if second buzzer wants to save a new recording
+		if (ramBRecord == 1'b1) //Save and store what is being freeplayed to memory for B
 		begin
 			//??
 		end
