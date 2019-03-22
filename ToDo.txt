@@ -32,8 +32,13 @@ Robert:
 
 ~~~~~SPRINT 3~~~~~
 Moe:
+- Fix code changes (bugs induced when testing)
+- Add final features to recorder (visual + algorithmic details)
+- Clean up code/Finish report
 Robert:
 - Fix FSM (only using SW when should be using KEY as well, etc)
+- Create RAM/Register code
+- Refactor writing and reading from file code
 
 
 

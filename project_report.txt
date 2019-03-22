@@ -79,11 +79,28 @@ Week 1:
 				- Time was limited, so we didn't get to test these changes. We will continue to edit and monitor it.
 	Also created (didn't test FSM module -> To lessen the heavy burden of next week's workload.
 
-[This is an example of a report where things didn't go so well.]
-Week 1: 
-	We added and tested the sensors and the main FSM. 
-	The distance sensor we had intended to use didn't work as expected (wasn't precise enough at further distances, only seems to work accurately within 5-10cm), so instead we've decided to change the project to use a light sensor instead.
-	Had trouble getting the FSM to work (kept getting stuck in state 101, took longer to debug than expected), so we may not be able to add the high score feature. We have updated that in the project description as an optional feature.
+Week 2:
+	We met earlier in the week and debugged our prior code to get the buzzer working.
+	We realized we didn't know how to connect the GPIO inputs so we switched to LEDG (from audio testing -> visual testing).
+	The green light probed at different rated based on input-> Code from prior week was working! (This was a huge success).
+	During the week then, 
+	we created modules to: - detect when to load or store beats from switches/input (finished FSM)
+						   - redirect inputs and outputs based on what needs to be recorded and when (Datapath for recorder)
+	                       - created two modules: to store ascii and note length to a text file, and another to read it
+						   and output it to the respective memory buzzer.
+	                       - Finally, we moved RateDivider to its own segment and also created a version of ratedivider that didnt
+						   do visual output (for the memory buzzers)
+	Tested, compiled and fixed modules on the DE2 board in lab:
+		- We spent some time figuring out how to use breadboard and pin connections. Were able to
+		successfully test our prior code (Auditorally instead of visually!). We now know how to set up
+		the final product physically.
+		- all the modules loaded and worked EXCEPT
+		- A MAJOR ISSUE: The researched File I/O for Verilog was unsupported by Quartus! Our
+		choices are: -use ModuleSim and figure out how to store file to SRAM or to create an artifical ram.
+		We chose to create an artificial ram similar to lab6 and test it with this on Monday. We will also
+		see if we can get the File I/O running at that time.
+		
+Week 3:
 
 
 
@@ -91,7 +108,7 @@ References
 ----------
 - ASIC Notepad-- (https://github.com/armitag8/ASIC_Notepad--/tree/master/src)
 	* Source code for keyboard input was referred to in order to figure out how to implement PS2 keyboard notes.
-	  Only relevant items were used: Detecting keyboard clock and data signal allocating to keys.
+	  Relevant items were used: Detecting keyboard clock and data signal allocating to keys.
 	  Keyboard input was buffed down to the keys needed to play buzzer sounds, and ascii return values were edited
 	  to be more relevant to the music_player, etc. modules.
 - DE2 Keyboard-- (https://github.com/ItsMeWithTheFace/DE2Keyboard)
@@ -104,7 +121,6 @@ References
 
 Repo & Video
 ------------
-<At the end of the project, provide links to your code repository and presentation video (and passwords if not public)>
 Repo:
 	- https://github.com/moyoonthego/Beat-Recorder-3000
 Video:
