@@ -2,7 +2,7 @@ module rate_divider(clk, ascii, speaker, freq_out);
 	input [6:0] ascii;
 	input clk;
 	
-	output reg speaker = 1'b1;
+	output reg [1:0] speaker = 1'b1;
 	output reg [18:0] freq_out;
 	
 	reg [31:0] clkdivider; // ***** This was [31:0] in reference code. Does not see the point of doing that *****
@@ -52,7 +52,7 @@ module rate_divider_no_display(clk, ascii, speaker); // this module is for saved
 	input [6:0] ascii;
 	input clk;
 	
-	output reg speaker = 1'b1;
+	output reg [2:0]  speaker = 1'b1;
 	
 	reg [31:0] clkdivider; // ***** This was [31:0] in reference code. Does not see the point of doing that *****
 
@@ -71,8 +71,8 @@ module rate_divider_no_display(clk, ascii, speaker); // this module is for saved
 				7'd68: clkdivider <= 50000000/1318; // E  Letter D
 				7'd70: clkdivider <= 50000000/1396; // F  Letter F      keyboard:  | W | E | / | T | Y | U | / |
 				7'd71: clkdivider <= 50000000/1566; // G  Letter G               | A | S | D | F | G | H | J |
-				7'd72: clkdivider <= 50000000/880;  //  A  Letter H ******** This is the lower A provided by the current frequency
-				7'd74: clkdivider <= 25000000;  // 50000000/986B  Letter J ******** This is the lower B provided by the current frequency
+				7'd72: clkdivider <= 50000000/880;  // A  Letter H ******** This is the lower A provided by the current frequency
+				7'd74: clkdivider <= 50000000/986;  // B  Letter J ******** This is the lower B provided by the current frequency
 				default: clkdivider <= 200000000;   // center C for default
 			endcase
 		end
