@@ -1,6 +1,6 @@
 module FSM(loadAFromRam, loadBFromRam, ramARecord, ramBRecord, toggles, clk);
     input [17:0] toggles;
-    // input [3:0] KEY; YOU DONT END UP USING THIS :(((((    - Alright :(((((
+    // input [3:0] KEY; YOU DONT END UP USING THIS :(((((    - Alright :(((((      - Okie dokie then :)))))
 	input clk;
 	
     output reg loadAFromRam;

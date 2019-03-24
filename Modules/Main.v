@@ -22,6 +22,10 @@ module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO,
 	wire ramAwren, ramBwren;
 	wire isLoadingFromA, isLoadingFromB;
 	FSM fsmMod(isLoadingFromA, isLoadingFromB, ramAwren, ramBwren, SW, CLOCK_50);
+	
+	// parameters to check if a reloop is needed
+	reg isAempty;
+	reg isBempty;
 
 	// Get address for loading and storing
 	wire [7:0] storeAddressA;
@@ -30,8 +34,8 @@ module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO,
 	wire [7:0] loadAddressB;
 	Store_address_counter sAdrsCtrModA(ramAwren, ascii_val[6:0], CLOCK_50, storeAddressA);
 	Store_address_counter sAdrsCtrModB(ramBwren, ascii_val[6:0], CLOCK_50, storeAddressB); 
-	Load_address_counter lAdrsCtrModA(loadAFromRam, CLOCK_50, loadAddressA);
-	Load_address_counter lAdrsCtrModB(loadBFromRam, CLOCK_50, loadAddressB);
+	Load_address_counter lAdrsCtrModA(isLoadingFromA, CLOCK_50, loadAddressA, isAempty);
+	Load_address_counter lAdrsCtrModB(isLoadingFromB, CLOCK_50, loadAddressB, isBempty);
 
 	// Give different address in different state
 	wire [7:0] ramAAddress;
@@ -53,6 +57,19 @@ module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO,
 			.data(ascii_val[6:0]),
 			.wren(ramBwren),
 			.q(ramBOut));
+	
+	// check if the address was empty -> reloop needed!
+	always @(posedge clk)
+	 begin
+		isAempty <= 0;
+		isBempty <= 0;
+		if (ramAOut == 0) begin // if nothing stored at address
+			isAempty <= 1; //we will reloop
+		end
+		if (ramBOut == 0) begin
+			isBempty <= 1; //we will reloop
+		end
+	 end
 	
 	// Free play mode should be always on: call module
 	rate_divider buzzer1(CLOCK_50, ascii_val, GPIO[1:0], LEDR[17:0]);

@@ -26,10 +26,12 @@ module Store_address_counter(doStart, ascii, clk, addressOut);
 	end
 endmodule
 
-module Load_address_counter(doStart, clk, addressOut);
+module Load_address_counter(doStart, clk, addressOut, isItEmpty);
 	input clk;
 	input doStart; // Start counting only when doStart is 1
 	output reg [7:0] addressOut = 8'b0;
+	// parameters to check if a reloop is needed
+	reg isAempty;
 
 	reg [31:0] counter = 32'b1;
 	reg [31:0] maxCount = 50000000; // Output one signal per second
@@ -41,9 +43,9 @@ module Load_address_counter(doStart, clk, addressOut);
 
 	always @(posedge clk)
 	 begin
-		if (doStart == 0)
+		if (doStart == 0 or isItEmpty)
 		begin
-			addressOut <= 8'b0; // Keep the address to be 0 when the doStart is Off
+			addressOut <= 8'b0; // Keep the address to be 0 when the doStart is Off OR WE NEED TO RELOOP
 		end
 		else if (counter == 0)
 		begin
