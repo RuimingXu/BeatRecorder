@@ -18,11 +18,46 @@ module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO,
 	
 	show_key keys(ascii_val[6:0], HEX1[7:0], HEX0[7:0]); // visual display -> showing the keys being used (for testing and looking pretty lol')
 	
-		
+	// The FSM module
+	wire ramAwren, ramBwren;
+	wire isLoadingFromA, isLoadingFromB;
+	FSM fsmMod(isLoadingFromA, isLoadingFromB, ramAwren, ramBwren, SW, CLOCK_50);
+
+	// Get address for loading and storing
+	wire [7:0] storeAddressA;
+	wire [7:0] storeAddressB;
+	wire [7:0] loadAddressA;
+	wire [7:0] loadAddressB;
+	Store_address_counter sAdrsCtrModA(ramAwren, ascii_val[6:0], CLOCK_50, storeAddressA);
+	Store_address_counter sAdrsCtrModB(ramBwren, ascii_val[6:0], CLOCK_50, storeAddressB); 
+	Load_address_counter lAdrsCtrModA(loadAFromRam, CLOCK_50, loadAddressA);
+	Load_address_counter lAdrsCtrModB(loadBFromRam, CLOCK_50, loadAddressB);
+
+	// Give different address in different state
+	wire [7:0] ramAAddress;
+	wire [7:0] ramBAddress;
+	Mux muxForRamA(storeAddressA, loadAddressA, isLoadingFromA, ramAAddress);
+	Mux muxForRamB(storeAddressB, loadAddressB, isLoadingFromB, ramBAddress);
+
+	// Initialize two rams for buzzer A and B
+	wire [6:0] ramAOut;
+	wire [6:0] ramBOut;
+	Ram ramA(.address(ramAAddress[7:0]),
+			.clock(CLOCK_50),
+			.data(ascii_val[6:0]),
+			.wren(ramAwren),
+			.q(ramAOut));
+
+	Ram ramB(.address(ramBAddress[7:0]),
+			.clock(CLOCK_50),
+			.data(ascii_val[6:0]),
+			.wren(ramBwren),
+			.q(ramBOut));
+	
 	// Free play mode should be always on: call module
 	rate_divider buzzer1(CLOCK_50, ascii_val, GPIO[1:0], LEDR[17:0]);
-	rate_divider_no_display buzzer2(CLOCK_50, ascii_val, GPIO[8:6]);
-	rate_divider_no_display buzzer3(CLOCK_50, ascii_val, GPIO[15:12]);
+	rate_divider_for_load buzzer2(isLoadingFromA, CLOCK_50, ramAOut, GPIO[8:6]);
+	rate_divider_for_load buzzer3(isLoadingFromB, CLOCK_50, ramBOut, GPIO[15:12]);
 	
 	// Simply call the music player module:
 	// ChooseMusic buzzers(.clk(CLOCK_50), .ascii(ascii_val[6:0]), .saved1(LEDG[1]), .saved2(LEDG[2]), .toggle(SW[17:0]), .record(KEY[3:0])); // NOT DONE, MORE I/O present

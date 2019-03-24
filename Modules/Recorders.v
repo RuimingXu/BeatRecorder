@@ -5,22 +5,21 @@ module storeRecording (ascii, clk, isA);
 	reg [6:0] prev_key;
 
 	integer keyfile; // pointer to file with saved keys
-	reg [31:0] counter;
-
-//	// Create (or overwrite the file)
-//	initial begin
-//		if (isA) begin // name the file based on which buzzer it is
-//			keyfile = $readmemb("A_keys.txt","w");
-//		end
-//		else begin
-//			keyfile = $readmemb("B_keys.txt","w");
-//		end
-//		prev_key[6:0] <= ascii[6:0]; // initially set the current key to be the first one found
-//		$fdisplay(keyfile,"%d", prev_key); //store the first keys name to the file in decimal form
-//		
-//	end
-
-	counter <= 1'b1;
+	reg [31:0] counter = 1'b1;
+// synthesis translate_off
+	// Create (or overwrite the file)
+	initial begin
+		if (isA) begin // name the file based on which buzzer it is
+			keyfile = $readmemb("A_keys.txt","w");
+		end
+		else begin
+			keyfile = $readmemb("B_keys.txt","w");
+		end
+		prev_key[6:0] <= ascii[6:0]; // initially set the current key to be the first one found
+		$fdisplay(keyfile,"%d", prev_key); //store the first keys name to the file in decimal form
+		
+	end
+// synthesis translate_on
 
 	always@(posedge clk) // IF THE VALUES BELOW AREN'T CHANGING IT MEANS ASCII ISN'T BEING REASSIGNED WHEN PRESSED.
 	begin: adding_keys

@@ -48,7 +48,8 @@ endmodule
 
 
 
-module rate_divider_no_display(clk, ascii, speaker); // this module is for saved buzzers. Just has freq_out removed
+module rate_divider_for_load(is_loading, clk, ascii, speaker); // this module is for saved buzzers. Just has freq_out removed
+	input is_loading;
 	input [6:0] ascii;
 	input clk;
 	
@@ -85,9 +86,13 @@ module rate_divider_no_display(clk, ascii, speaker); // this module is for saved
 
     always @(posedge clk)
 	 begin
-		if (counter==0)
+		if (is_loading == 0)
 		begin
-			speaker <= ~speaker;
+			speaker <= 1'b0; // Play nothing when is_loading is off
+		end
+		else if (counter == 0)
+		begin
+			speaker <= ~speaker; // Flip speaker signal every time the counter counts down to 0
 		end
 	 end
 
