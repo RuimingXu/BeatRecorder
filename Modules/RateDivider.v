@@ -1,9 +1,9 @@
-module rate_divider(clk, ascii, speaker, freq_out);
+module rate_divider(clk, ascii, speaker);//, freq_out);
 	input [6:0] ascii;
 	input clk;
 	
-	output reg [1:0] speaker = 1'b1;
-	output reg [18:0] freq_out;
+	output reg [2:0] speaker = 1'b1;
+//	output reg [18:0] freq_out;
 	
 	reg [31:0] clkdivider; // ***** This was [31:0] in reference code. Does not see the point of doing that *****
 
@@ -32,7 +32,7 @@ module rate_divider(clk, ascii, speaker, freq_out);
     always @(posedge clk)
     begin
         if(counter==0) counter <= clkdivider-1; else counter <= counter-1;
-        freq_out <= clkdivider[18:0];
+//        freq_out <= clkdivider[18:0];
     end
 
     always @(posedge clk)
