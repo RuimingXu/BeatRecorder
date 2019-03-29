@@ -100,7 +100,26 @@ Week 2:
 		We chose to create an artificial ram similar to lab6 and test it with this on Monday. We will also
 		see if we can get the File I/O running at that time.
 		
+
 Week 3:
+	- This week we created the following modules:
+			- a RAM handler (from template of a given lab)
+			- a module that stores a new key/note pressed into an address in the RAM memory to playback later.
+			- a module to iterate through addresses of a given address pointer and load its values from RAM.
+	Note that, for the above module, we modified it to only play each stored key/note for 1 second,
+	because we didnt have time. This was one of our backup plans and was expected.
+	Furthermore, we had to edit the following modules:
+		- The main module needed to call the address storing and loading modules now, in case there was
+		a desire to load values or store them. It also needed to be able to access the RAM and get this info.
+		All of this was added to the main module.
+		- The FSM had to be updated with fewer parameters (4) since the RAM will only load or store 
+		(and do this only for A or B now).
+	- We planned on wrapping everything up this week but weren't able to. 
+	Everything we did seemed to work as wanted, except that the storing module has an error on its "else" case
+	that we dont understand why it is occuring.
+	- We believe/hope that coming in for an hour and two will let us fix this for it (and also make
+	sure it doesn't occur in the loading module), then we should be ready to present next week.
+	
 
 
 
