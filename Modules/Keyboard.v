@@ -92,7 +92,14 @@ module convert_readable(raw_data, ascii);
 			8'b00101100: ascii = 7'd84; // 'T'
 			8'b00111100: ascii = 7'd85; // 'U'
 			8'b00011101: ascii = 7'd87; // 'W'
-			8'b00110101: ascii = 7'd89; // 'Y'
+			8'b00110101: ascii = 7'd89; // 'Y'-----
+			8'b00011010: ascii = 7'd90; // 'Z'
+			8'b00100010: ascii = 7'd88; // 'X'
+			8'b00100001: ascii = 7'd67; // 'C'
+			8'b00101010: ascii = 7'd86; // 'V'
+			8'b00110010: ascii = 7'd66; // 'B'
+			8'b00110001: ascii = 7'd78; // 'N'
+			8'b00111010: ascii = 7'd77; // 'M'
     		default: ascii = 7'd32; // all other selected vals
 		endcase
 	end

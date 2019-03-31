@@ -1,4 +1,4 @@
-module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO, HEX0, HEX1);
+module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO, HEX0, HEX1, HEX4, HEX5, HEX6, HEX7);
 	input [3:0] KEY;     // KEY0 is our record button. KEY0 again is stop recording (saved recordings can be written over, so no reset button needed).
 	input [17:0] SW;      // SW 1,0 are our registers for saved recordings
 	input PS2_KBCLK;    // Clock input from the keyboard
@@ -17,6 +17,8 @@ module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO,
 	read_keyboard ps2(.kb_data(PS2_KBDAT), .kb_clock(PS2_KBCLK), .ascii(ascii_val[6:0]));
 	
 	show_key keys(ascii_val[6:0], HEX1[7:0], HEX0[7:0]); // visual display -> showing the keys being used (for testing and looking pretty lol')
+	show_key keys(ramAOut[6:0], HEX5[7:0], HEX4[7:0]);	
+	show_key keys(ramBOut[6:0], HEX7[7:0], HEX6[7:0]);
 	
 	// The FSM module
 	wire ramAwren, ramBwren;
@@ -32,7 +34,6 @@ module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO,
 	wire [7:0] storeAddressB;
 	wire [7:0] loadAddressA;
 	wire [7:0] loadAddressB;
-	wire [40:0] wev;
 	Store_address_counter sAdrsCtrModA(ramAwren, ascii_val[6:0], CLOCK_50, storeAddressA);
 	Store_address_counter sAdrsCtrModB(ramBwren, ascii_val[6:0], CLOCK_50, storeAddressB); 
 	Load_address_counter lAdrsCtrModA(isLoadingFromA, CLOCK_50, loadAddressA, isAempty);
@@ -60,9 +61,9 @@ module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO,
 			.q(ramBOut));
 
 	// Free play mode should be always on: call module
-	rate_divider buzzer1(CLOCK_50, ascii_val, GPIO[8:6], LEDR[9:0]);
+	rate_divider buzzer1(CLOCK_50, ascii_val, GPIO[8:6], LEDR[17:0]);
 	rate_divider_for_load buzzer2(isLoadingFromA, CLOCK_50, ramAOut, GPIO[14:12]);
-	//rate_divider_for_load buzzer3(isLoadingFromB, CLOCK_50, test, GPIO[20:18]);
+	rate_divider_for_load buzzer3(isLoadingFromB, CLOCK_50, ramBOut, GPIO[20:18]);
 	
 	// Simply call the music player module:
 	// ChooseMusic buzzers(.clk(CLOCK_50), .ascii(ascii_val[6:0]), .saved1(LEDG[1]), .saved2(LEDG[2]), .toggle(SW[17:0]), .record(KEY[3:0])); // NOT DONE, MORE I/O present
