@@ -32,17 +32,11 @@ module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO,
 	wire [7:0] storeAddressB;
 	wire [7:0] loadAddressA;
 	wire [7:0] loadAddressB;
-	wire ramAClk1, ramAClk2;
-	wire ramBClk1, ramBClk2;
-	wire ramAClk = (ramAClk1 == 1) || (ramAClk2 == 1);
-	wire ramBClk = (ramBClk1 == 1) || (ramBClk2 == 1);
-	assign LEDG[6] = ramAClk;
-	assign LEDG[7] = ramBClk;
 	wire [40:0] wev;
-	Store_address_counter sAdrsCtrModA(ramAwren, ascii_val[6:0], CLOCK_50, storeAddressA, ramAClk1, LEDR[7:0], LEDG[5]);
-	Store_address_counter sAdrsCtrModB(ramBwren, ascii_val[6:0], CLOCK_50, storeAddressB, ramBClk1, wev[15:8], wev[24]); 
-	Load_address_counter lAdrsCtrModA(isLoadingFromA, CLOCK_50, loadAddressA, isAempty, ramAClk2, LEDR[17:10]);
-	Load_address_counter lAdrsCtrModB(isLoadingFromB, CLOCK_50, loadAddressB, isBempty, ramBClk2, wev[23:16]);
+	Store_address_counter sAdrsCtrModA(ramAwren, ascii_val[6:0], CLOCK_50, storeAddressA);
+	Store_address_counter sAdrsCtrModB(ramBwren, ascii_val[6:0], CLOCK_50, storeAddressB); 
+	Load_address_counter lAdrsCtrModA(isLoadingFromA, CLOCK_50, loadAddressA, isAempty);
+	Load_address_counter lAdrsCtrModB(isLoadingFromB, CLOCK_50, loadAddressB, isBempty);
 
 	// Give different address in different state
 	wire [7:0] ramAAddress;
@@ -54,33 +48,19 @@ module Beat_recorder (LEDG, LEDR, SW, KEY, PS2_KBCLK, CLOCK_50, PS2_KBDAT, GPIO,
 	wire [6:0] ramAOut;
 	wire [6:0] ramBOut;
 	Ram ramA(.address(ramAAddress[7:0]),
-			.clock(ramAClk),
+			.clock(CLOCK_50),
 			.data(ascii_val[6:0]),
 			.wren(ramAwren),
 			.q(ramAOut));
-	//assign LEDR[6:0] = ramAOut[6:0]; ////////////////////////
 
 	Ram ramB(.address(ramBAddress[7:0]),
-			.clock(ramBClk),
+			.clock(CLOCK_50),
 			.data(ascii_val[6:0]),
 			.wren(ramBwren),
 			.q(ramBOut));
-	
-	// check if the address was empty -> reloop needed!
-//	always @(posedge CLOCK_50)
-//	 begin
-//		isAempty <= 0;
-//		isBempty <= 0;
-//		if (ramAOut == 0) begin // if nothing stored at address
-//			isAempty <= 1; //we will reloop
-//		end
-//		if (ramBOut == 0) begin
-//			isBempty <= 1; //we will reloop
-//		end
-//	 end
 
 	// Free play mode should be always on: call module
-	rate_divider buzzer1(CLOCK_50, ascii_val, GPIO[8:6]);//, LEDR[17:0]);
+	rate_divider buzzer1(CLOCK_50, ascii_val, GPIO[8:6], LEDR[9:0]);
 	rate_divider_for_load buzzer2(isLoadingFromA, CLOCK_50, ramAOut, GPIO[14:12]);
 	//rate_divider_for_load buzzer3(isLoadingFromB, CLOCK_50, test, GPIO[20:18]);
 	

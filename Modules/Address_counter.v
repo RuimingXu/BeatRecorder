@@ -1,11 +1,9 @@
-module Store_address_counter(doStart, ascii, clk, addressOut, clockOut, visualOut, visualClk);
+module Store_address_counter(doStart, ascii, clk, addressOut, clockOut);
 	input [6:0] ascii;
 	input clk;
 	input doStart; // Start counting only when doStart is 1
 	output reg [7:0] addressOut = 8'b0;
 	output reg clockOut = 0;
-	output [7:0] visualOut;
-	output reg visualClk = 8'b0;
 
 	reg [7:0] isIn;
 	reg [6:0] preAscii = 7'd32;
@@ -13,10 +11,6 @@ module Store_address_counter(doStart, ascii, clk, addressOut, clockOut, visualOu
 
 	always @(posedge clk)
 	begin
-		if (clockOut == 1'b1)
-		begin
-			visualClk = 1;
-		end
 		// Start counting from 0 whenever doStart is turned on
 		if (doStart == 1'b1)
 		begin
@@ -51,18 +45,14 @@ module Store_address_counter(doStart, ascii, clk, addressOut, clockOut, visualOu
 		
 		
 	end
-	
-	//assign visualOut[7:0] = addressOut[7:0];////////
-	assign visualOut[7:0] = addressOut[7:0];
+
 endmodule
 
-module Load_address_counter(doStart, clk, addressOut, isItEmpty, clockOut, visualOut);
+module Load_address_counter(doStart, clk, addressOut, isItEmpty);
 	input clk;
 	input isItEmpty;
 	input doStart; // Start counting only when doStart is 1
 	output reg [7:0] addressOut = 8'b0;
-	output reg clockOut = 0;
-	output [7:0] visualOut;
 	// parameters to check if a reloop is needed
 
 	reg [31:0] counter = 32'b1;
@@ -77,18 +67,12 @@ module Load_address_counter(doStart, clk, addressOut, isItEmpty, clockOut, visua
 	 begin
 		if (doStart == 1'b1)
 		begin
-			// Reset the output clock bit if the current clock bit is on
-			if (clockOut == 1)
-			begin
-				clockOut <= 0;
-			end
 			////clockOut
 			//if (doStart == 0) //|| isItEmpty)
 			//begin
 			//	addressOut <= 8'b0; // Keep the address to be 0 when the doStart is Off OR WE NEED TO RELOOP
 			if (counter == 0)
 			begin
-				clockOut <= 1;
 				addressOut[7:0] <= addressOut[7:0] + 8'b1; // Increment the address by one per signal (per second)
 			end
 		end
@@ -98,6 +82,5 @@ module Load_address_counter(doStart, clk, addressOut, isItEmpty, clockOut, visua
 		end
 	end
 
-	assign visualOut[7:0] = addressOut[7:0];
 endmodule
 
