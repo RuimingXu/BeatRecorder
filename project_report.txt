@@ -120,6 +120,22 @@ Week 3:
 	- We believe/hope that coming in for an hour and two will let us fix this for it (and also make
 	sure it doesn't occur in the loading module), then we should be ready to present next week.
 	
+	
+FINAL WEEK (Presentation Reflection):
+	- This week we presented our overall project in lab.
+	- There were a few things running a bit slow, so we showed the TA the barebacks of what we had
+	and he didn't want to see every single individual piece.
+	- Overall, we're pretty confident in this project and love that it is something we can constantly
+	come back to and appreciate/utilize.
+	- We didn't have a visual display because working with FSM, clocks and RAM wass already so complicated,
+	but we tried to decorate it with as much as we could. At the end of the day, it was a difficult task but we succeeded.
+	- We had to make sacrifices (oddly enough, the things we had predicted), but we can honestly say that the
+	gist of what we had wanted to make was maintained in the final project.
+		- Two things that were not included in particular:
+			* Using same key to store and record, different one for B and A (we ended up using seperate switches instead)
+			* Having varying length for saved notes and keys
+			(We know how to fix this and could do it, but we didn't have time so stuck to 1s for all)
+	
 
 
 
@@ -143,5 +159,5 @@ Repo & Video
 Repo:
 	- https://github.com/moyoonthego/Beat-Recorder-3000
 Video:
-	- N/A yet
+	- https://youtu.be/PO32I1FLGJ8
 
